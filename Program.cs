@@ -17,6 +17,10 @@ namespace Lab42Exceptions
                 int val = Int32.Parse(userInput!);
                 Console.WriteLine($"Успішно прочитано: {val}");
             }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("[Помилка аргументу]: Значення не може бути null!");
+            }
             catch (FormatException)
             {
                 Console.WriteLine("[Помилка формату]: Введене значення не є цілим числом!");
@@ -28,6 +32,10 @@ namespace Lab42Exceptions
             catch (OverflowException)
             {
                 Console.WriteLine("[Помилка діапазону]: Введене значення більше за максимальне число для Int32 (2 147 483 647)!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Невідома помилка]: {ex.Message}");
             }
         }
     }
