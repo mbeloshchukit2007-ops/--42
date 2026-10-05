@@ -9,34 +9,48 @@ namespace Lab42Exceptions
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.InputEncoding = System.Text.Encoding.UTF8;
 
-            Console.Write("Введіть ціле число: ");
-            string? userInput = Console.ReadLine();
+            Console.WriteLine("--- Перевірка коректності введення цілих чисел (Обробка винятків) ---\n");
 
-            try
+            bool success = false;
+            int parsedValue = 0;
+
+            while (!success)
             {
-                int val = Int32.Parse(userInput!);
-                Console.WriteLine($"Успішно прочитано: {val}");
+                Console.Write("Введіть ціле число: ");
+                string? userInput = Console.ReadLine();
+
+                try
+                {
+                    parsedValue = Int32.Parse(userInput!);
+                    success = true;
+                }
+                catch (ArgumentNullException)
+                {
+                    Console.WriteLine("[Помилка]: Введено порожній рядок (null). Спробуйте ще раз.\n");
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("[Помилка]: Введене значення не є цілим числом. Спробуйте ще раз.\n");
+                }
+                catch (OverflowException) when (userInput != null && userInput.Trim().StartsWith("-"))
+                {
+                    Console.WriteLine("[Помилка]: Число менше за мінімально можливе для типу Int32 (-2 147 483 648). Спробуйте ще раз.\n");
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("[Помилка]: Число більше за максимально можливе для типу Int32 (2 147 483 647). Спробуйте ще раз.\n");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Невідома помилка]: {ex.Message}. Спробуйте ще раз.\n");
+                }
+                finally
+                {
+                    Console.WriteLine("-> [finally]: Спробу введення опрацьовано.");
+                }
             }
-            catch (ArgumentNullException)
-            {
-                Console.WriteLine("[Помилка аргументу]: Значення не може бути null!");
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("[Помилка формату]: Введене значення не є цілим числом!");
-            }
-            catch (OverflowException) when (userInput != null && userInput.Trim().StartsWith("-"))
-            {
-                Console.WriteLine("[Помилка діапазону]: Введене значення менше за мінімальне число для Int32 (-2 147 483 648)!");
-            }
-            catch (OverflowException)
-            {
-                Console.WriteLine("[Помилка діапазону]: Введене значення більше за максимальне число для Int32 (2 147 483 647)!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Невідома помилка]: {ex.Message}");
-            }
+
+            Console.WriteLine($"\nРезультат: Успішно введено число {parsedValue}");
         }
     }
 }
